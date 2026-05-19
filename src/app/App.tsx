@@ -6,6 +6,9 @@ import Lenis from 'lenis';
 
 import ShaderImage from '../components/ShaderImage';
 import TransitionLayout from '../components/TransitionLayout';
+import FloatingPetalsCanvas from '../components/FloatingPetalsCanvas';
+import CalligraphyLogo from '../components/CalligraphyLogo';
+import BottomDockMenu from '../components/BottomDockMenu';
 
 // Register GSAP plugins
 gsap.registerPlugin(ScrollTrigger);
@@ -56,6 +59,15 @@ const TIMELINE = [
   { year: '2027', title: 'MCA (In Progress) — CGPA 8.39', subtitle: 'RCM, Bhubaneswar' }
 ];
 
+const ACHIEVEMENTS = [
+  { icon: '🏆', title: 'Top 10 in Academics', year: '2024' },
+  { icon: '💃', title: 'Top Dancer in College', year: '2023' },
+  { icon: '🧑‍💼', title: 'House Head — SWC Berhampur', year: '2023' },
+  { icon: '📋', title: 'Class Representative — SWC Berhampur', year: '2023' },
+  { icon: '⚙️', title: 'A Ka Ma — Organized Tech Event', year: '2025' },
+  { icon: '🤝', title: 'Brahmashtra — Event Volunteer', year: '2025' }
+];
+
 const CONTACT_LINKS = [
   { label: 'EMAIL', value: 'banashree.bhuyan@rcm.ac', href: 'mailto:banashree.bhuyan@rcm.ac' },
   { label: 'LINKEDIN', value: 'Barsha Bhuyan', href: 'https://www.linkedin.com/in/barsha-bhuyan-742007275/' },
@@ -65,215 +77,6 @@ const CONTACT_LINKS = [
 // ════════════════════════════════════════
 // SUB-COMPONENTS
 // ════════════════════════════════════════
-
-// Minimal Fixed Top Navigation Bar
-function HeaderBar({ onMenuToggle }: { onMenuToggle: () => void }) {
-  return (
-    <header
-      style={{
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        width: '100%',
-        height: '90px',
-        padding: '0 6%',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        zIndex: 9999,
-        mixBlendMode: 'difference' // Elegant visual overlap
-      }}
-    >
-      <Link
-        to="/"
-        className="clickable font-mono"
-        style={{
-          fontSize: 14,
-          color: '#ffffff', // Mix-blend turns this black on cream
-          textDecoration: 'none',
-          letterSpacing: '0.12em',
-          fontWeight: 700
-        }}
-      >
-        BANASHREE S. BHUYAN
-      </Link>
-
-      <button
-        onClick={onMenuToggle}
-        className="clickable"
-        style={{
-          background: 'none',
-          border: 'none',
-          display: 'flex',
-          flexDirection: 'column',
-          gap: 6,
-          width: 32,
-          cursor: 'pointer'
-        }}
-      >
-        <div style={{ width: '100%', height: 2, backgroundColor: '#ffffff' }} />
-        <div style={{ width: '100%', height: 2, backgroundColor: '#ffffff' }} />
-      </button>
-    </header>
-  );
-}
-
-// Fullscreen Hamburg Navigation Menu Overlay
-function MenuOverlay({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
-  const overlayRef = useRef<HTMLDivElement>(null);
-  const linksRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (isOpen) {
-      // Animate overlay entrance
-      gsap.to(overlayRef.current, {
-        y: '0%',
-        duration: 0.65,
-        ease: 'power3.out'
-      });
-
-      // Stagger animate links rising from bottom
-      const links = linksRef.current?.querySelectorAll('.menu-link-wrapper span');
-      if (links) {
-        gsap.fromTo(
-          links,
-          { y: '100%' },
-          {
-            y: '0%',
-            duration: 0.65,
-            stagger: 0.08,
-            ease: 'power2.out',
-            delay: 0.2
-          }
-        );
-      }
-    } else {
-      // Animate overlay slide out
-      gsap.to(overlayRef.current, {
-        y: '-100%',
-        duration: 0.65,
-        ease: 'power3.inOut'
-      });
-    }
-  }, [isOpen]);
-
-  const handleLinkClick = () => {
-    onClose();
-  };
-
-  return (
-    <div
-      ref={overlayRef}
-      style={{
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        width: '100vw',
-        height: '100vh',
-        backgroundColor: '#1a1a1a', // Black background overlay
-        color: '#f5f4f0',
-        zIndex: 99999,
-        transform: 'translateY(-100%)',
-        display: 'flex',
-        alignItems: 'center',
-        padding: '0 10%'
-      }}
-    >
-      {/* Absolute Close Button */}
-      <button
-        onClick={onClose}
-        className="clickable font-mono"
-        style={{
-          position: 'absolute',
-          top: 35,
-          right: '6%',
-          background: 'none',
-          border: 'none',
-          color: '#f5f4f0',
-          fontSize: 13,
-          letterSpacing: '0.12em',
-          cursor: 'pointer'
-        }}
-      >
-        CLOSE ✕
-      </button>
-
-      <div ref={linksRef} style={{ display: 'flex', flexDirection: 'column', gap: 32 }}>
-        <div className="menu-link-wrapper" style={{ overflow: 'hidden' }}>
-          <Link
-            to="/"
-            onClick={handleLinkClick}
-            className="font-serif clickable"
-            style={{
-              fontSize: 'clamp(48px, 8vw, 100px)',
-              fontWeight: 800,
-              textDecoration: 'none',
-              color: '#f5f4f0',
-              display: 'inline-block',
-              lineHeight: 1.1
-            }}
-          >
-            <span style={{ display: 'inline-block' }}>HOME</span>
-          </Link>
-        </div>
-
-        <div className="menu-link-wrapper" style={{ overflow: 'hidden' }}>
-          <a
-            href="#projects"
-            onClick={handleLinkClick}
-            className="font-serif clickable"
-            style={{
-              fontSize: 'clamp(48px, 8vw, 100px)',
-              fontWeight: 800,
-              textDecoration: 'none',
-              color: '#f5f4f0',
-              display: 'inline-block',
-              lineHeight: 1.1
-            }}
-          >
-            <span style={{ display: 'inline-block' }}>WORK</span>
-          </a>
-        </div>
-
-        <div className="menu-link-wrapper" style={{ overflow: 'hidden' }}>
-          <a
-            href="#about"
-            onClick={handleLinkClick}
-            className="font-serif clickable"
-            style={{
-              fontSize: 'clamp(48px, 8vw, 100px)',
-              fontWeight: 800,
-              textDecoration: 'none',
-              color: '#f5f4f0',
-              display: 'inline-block',
-              lineHeight: 1.1
-            }}
-          >
-            <span style={{ display: 'inline-block' }}>ABOUT</span>
-          </a>
-        </div>
-
-        <div className="menu-link-wrapper" style={{ overflow: 'hidden' }}>
-          <a
-            href="#contact"
-            onClick={handleLinkClick}
-            className="font-serif clickable"
-            style={{
-              fontSize: 'clamp(48px, 8vw, 100px)',
-              fontWeight: 800,
-              textDecoration: 'none',
-              color: '#f5f4f0',
-              display: 'inline-block',
-              lineHeight: 1.1
-            }}
-          >
-            <span style={{ display: 'inline-block' }}>CONTACT</span>
-          </a>
-        </div>
-      </div>
-    </div>
-  );
-}
 
 // Custom Bespoke Lag Cursor Component using GSAP quickTo
 function BespokeCursor() {
@@ -333,7 +136,7 @@ function BespokeCursor() {
         border: '1px solid var(--text-primary)',
         pointerEvents: 'none',
         zIndex: 999999,
-        backgroundColor: isHovered ? 'rgba(26, 26, 26, 0.05)' : 'transparent',
+        backgroundColor: isHovered ? 'rgba(78, 59, 124, 0.04)' : 'transparent',
         transition: 'width 0.3s cubic-bezier(0.16, 1, 0.3, 1), height 0.3s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.3s ease'
       }}
     />
@@ -346,27 +149,19 @@ function BespokeCursor() {
 
 // Main Landing Home Page
 function HomePage() {
-  const titleRef = useRef<HTMLDivElement>(null);
-  const bioRef = useRef<HTMLParagraphElement>(null);
+  const [scrollY, setScrollY] = useState(0);
+
+  // Monitor scroll for fixed background parallax fading
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrollY(window.scrollY);
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   useEffect(() => {
-    // 1. Stagger load-in for display header title
-    const titleLines = titleRef.current?.querySelectorAll('.title-line span');
-    if (titleLines) {
-      gsap.fromTo(
-        titleLines,
-        { y: 80, opacity: 0 },
-        {
-          y: 0,
-          opacity: 1,
-          duration: 0.95,
-          stagger: 0.12,
-          ease: 'power3.out'
-        }
-      );
-    }
-
-    // 2. Stagger ScrollTrigger slide-ins for project cards
+    // Stagger ScrollTrigger slide-ins for project cards
     const cards = document.querySelectorAll('.project-card');
     cards.forEach((card) => {
       gsap.fromTo(
@@ -386,303 +181,475 @@ function HomePage() {
       );
     });
 
-    // 3. Line-by-line reveal for About bio on scroll
-    if (bioRef.current) {
+    // Stagger slide-ins for achievement cards
+    const achs = document.querySelectorAll('.ach-card');
+    achs.forEach((card) => {
       gsap.fromTo(
-        bioRef.current,
-        { opacity: 0, y: 30 },
+        card,
+        { opacity: 0, y: 40 },
         {
           opacity: 1,
           y: 0,
-          duration: 1,
+          duration: 0.6,
           ease: 'power2.out',
           scrollTrigger: {
-            trigger: bioRef.current,
-            start: 'top 80%',
+            trigger: card,
+            start: 'top 90%',
             toggleActions: 'play none none none'
           }
         }
       );
-    }
+    });
   }, []);
 
+  const viewportHeight = window.innerHeight;
+  const isLandingVisible = scrollY < viewportHeight * 1.1;
+
+  // Calculate opacity & scale based on scroll
+  const landingOpacity = Math.max(0, 1 - scrollY / (viewportHeight * 0.8));
+  const landingScale = 1 - (scrollY / viewportHeight) * 0.08;
+
   return (
-    <div style={{ width: '100%', padding: '0 6% 120px 6%' }}>
-      {/* HERO SECTION */}
-      <section
-        style={{
-          minHeight: '85vh',
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'center',
-          paddingTop: 160
-        }}
-      >
-        <div ref={titleRef} style={{ display: 'flex', flexDirection: 'column' }}>
-          <div className="title-line" style={{ overflow: 'hidden', height: '1.2em' }}>
-            <span
-              className="font-serif"
-              style={{
-                fontSize: 'clamp(54px, 10vw, 130px)',
-                fontWeight: 900,
-                color: 'var(--text-primary)',
-                display: 'inline-block',
-                lineHeight: 1.0,
-                letterSpacing: '-0.02em'
-              }}
-            >
-              BANASHREE S.
-            </span>
+    <div style={{ width: '100%', position: 'relative' }}>
+      
+      {/* 1. FIXED BACKGROUND LANDING SCREEN (Natalie Liu style) */}
+      {isLandingVisible && (
+        <div
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            width: '100vw',
+            height: '100vh',
+            backgroundColor: '#ffffff',
+            zIndex: 1,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            pointerEvents: 'none',
+            opacity: landingOpacity,
+            transform: `scale(${landingScale})`,
+            transition: 'opacity 0.1s ease-out, transform 0.1s ease-out'
+          }}
+        >
+          {/* Interactive 3D Petals Canvas */}
+          <FloatingPetalsCanvas />
+
+          {/* Central Calligraphy Logo & Text */}
+          <div style={{ position: 'relative', zIndex: 10, pointerEvents: 'none' }}>
+            <CalligraphyLogo />
           </div>
-          <div className="title-line" style={{ overflow: 'hidden', height: '1.2em' }}>
+
+          {/* Scroll Down Indicator */}
+          <div
+            style={{
+              position: 'absolute',
+              bottom: '120px',
+              left: '50%',
+              transform: 'translateX(-50%)',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              gap: '10px',
+              opacity: Math.max(0, 1 - scrollY / 150),
+              transition: 'opacity 0.2s ease'
+            }}
+          >
             <span
-              className="font-serif"
               style={{
-                fontSize: 'clamp(54px, 10vw, 130px)',
-                fontWeight: 900,
-                color: 'var(--text-primary)',
-                display: 'inline-block',
-                lineHeight: 1.0,
-                letterSpacing: '-0.02em'
+                fontFamily: "'JetBrains Mono', monospace",
+                fontSize: '9px',
+                letterSpacing: '0.3em',
+                color: '#8e8e8a',
+                textTransform: 'uppercase',
+                fontWeight: 500
               }}
             >
-              BHUYAN
+              Scroll to explore
             </span>
+            <div
+              style={{
+                width: '1px',
+                height: '40px',
+                background: 'linear-gradient(to bottom, #8e8e8a, transparent)',
+                animation: 'scrollPulse 2s infinite ease-in-out'
+              }}
+            />
           </div>
         </div>
+      )}
 
-        <p
-          className="font-mono"
-          style={{
-            fontSize: 12,
-            letterSpacing: '0.18em',
-            color: 'var(--text-secondary)',
-            marginTop: 40,
-            textTransform: 'uppercase'
-          }}
-        >
-          MCA STUDENT / TECH ENTHUSIAST & DEVELOPER
-        </p>
-      </section>
+      {/* CSS Keyframes for Pulsing and Hover Styles */}
+      <style>{`
+        @keyframes scrollPulse {
+          0% { transform: scaleY(0.4); opacity: 0.3; transform-origin: top; }
+          50% { transform: scaleY(1); opacity: 1; transform-origin: top; }
+          100% { transform: scaleY(0.4); opacity: 0.3; transform-origin: top; }
+        }
+        .bento-card {
+          border: 1px solid rgba(26, 26, 26, 0.05);
+          transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .bento-card:hover {
+          border-color: rgba(78, 59, 124, 0.18);
+          transform: translateY(-4px);
+          box-shadow: 0 12px 30px rgba(78, 59, 124, 0.03);
+        }
+        .skill-tag {
+          transition: all 0.2s ease;
+        }
+        .skill-tag:hover {
+          background: #4e3b7c !important;
+          color: #ffffff !important;
+        }
+      `}</style>
 
-      {/* ASYMMETRIC PROJECT GRID */}
-      <section id="projects" style={{ marginTop: 80 }}>
-        <h2
-          className="font-mono"
-          style={{
-            fontSize: 11,
-            letterSpacing: '0.12em',
-            color: 'var(--text-secondary)',
-            textTransform: 'uppercase',
-            marginBottom: 48,
-            borderBottom: '1px solid rgba(26, 26, 26, 0.08)',
-            paddingBottom: 16
-          }}
-        >
-          SELECTED WORK
-        </h2>
-
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(12, 1fr)', gap: '40px' }}>
-          {PROJECTS.map((proj) => (
-            <div key={proj.id} className={`${proj.gridSpan} project-card`}>
-              <Link
-                to={`/projects/${proj.id}`}
-                className="clickable"
-                style={{ textDecoration: 'none', display: 'block' }}
+      {/* 2. SCROLLABLE MAIN CONTENT (Cream editorial theme, slides OVER landing background) */}
+      <div
+        style={{
+          position: 'relative',
+          zIndex: 2,
+          width: '100%',
+          marginTop: '100vh', // Start below the viewport to reveal landing screen
+          backgroundColor: 'var(--bg-color)', // Solid Cream color `#f5f4f0`
+          boxShadow: '0 -20px 40px rgba(0, 0, 0, 0.03)',
+          borderTopLeftRadius: '24px',
+          borderTopRightRadius: '24px'
+        }}
+      >
+        <div style={{ padding: '100px 6% 120px 6%' }}>
+          
+          {/* ASYMMETRIC SELECTED WORK GRID */}
+          <section id="projects" style={{ scrollMarginTop: '60px' }}>
+            <div style={{ marginBottom: '60px' }}>
+              <span
+                style={{
+                  fontFamily: "'JetBrains Mono', monospace",
+                  fontSize: '10px',
+                  letterSpacing: '0.25em',
+                  color: 'var(--text-secondary)',
+                  textTransform: 'uppercase',
+                  display: 'block',
+                  marginBottom: '12px'
+                }}
               >
-                {/* 2:3 Aspect ratio portrait WebGL shader thumbnail */}
+                Selected Work
+              </span>
+              <h2
+                style={{
+                  fontFamily: "'Syne', sans-serif",
+                  fontSize: 'clamp(28px, 5vw, 56px)',
+                  fontWeight: 900,
+                  color: 'var(--text-primary)',
+                  letterSpacing: '-0.02em',
+                  lineHeight: 1.1
+                }}
+              >
+                Creative Projects
+              </h2>
+            </div>
+
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(12, 1fr)', gap: '48px' }}>
+              {PROJECTS.map((proj) => (
+                <div key={proj.id} className={`${proj.gridSpan} project-card`}>
+                  <Link
+                    to={`/projects/${proj.id}`}
+                    className="clickable"
+                    style={{ textDecoration: 'none', display: 'block' }}
+                  >
+                    {/* 2:3 Aspect ratio portrait WebGL shader thumbnail */}
+                    <div
+                      style={{
+                        width: '100%',
+                        aspectRatio: '0.666',
+                        background: proj.bgColor,
+                        borderRadius: 12,
+                        overflow: 'hidden',
+                        position: 'relative',
+                        boxShadow: '0 15px 40px rgba(0,0,0,0.02)'
+                      }}
+                    >
+                      <ShaderImage src={proj.img} />
+                    </div>
+
+                    <div style={{ marginTop: 24, display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
+                      <h3
+                        className="font-serif"
+                        style={{
+                          fontSize: 24,
+                          fontWeight: 800,
+                          color: 'var(--text-primary)',
+                          letterSpacing: '-0.01em'
+                        }}
+                      >
+                        {proj.title}
+                      </h3>
+                      <span className="font-mono" style={{ fontSize: 11, color: 'var(--text-secondary)' }}>
+                        {proj.category}
+                      </span>
+                    </div>
+                  </Link>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          {/* ABOUT / INFO SECTION */}
+          <section id="about" style={{ marginTop: '180px', borderTop: '1px solid rgba(26, 26, 26, 0.08)', paddingTop: '100px', scrollMarginTop: '60px' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(12, 1fr)', gap: '48px' }}>
+              
+              {/* Left Column Portrait */}
+              <div className="col-span-12 md:col-span-4" style={{ display: 'flex', alignItems: 'center' }}>
                 <div
                   style={{
                     width: '100%',
-                    aspectRatio: '0.666',
-                    background: proj.bgColor,
-                    borderRadius: 8,
+                    aspectRatio: '0.75',
+                    borderRadius: 12,
                     overflow: 'hidden',
-                    position: 'relative'
+                    background: '#dfdbd0',
+                    boxShadow: '0 15px 45px rgba(0,0,0,0.04)'
                   }}
                 >
-                  <ShaderImage src={proj.img} />
+                  <img
+                    src="/portrait.png"
+                    alt="Portrait"
+                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                  />
                 </div>
+              </div>
 
-                <div style={{ marginTop: 20, display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
-                  <h3
-                    className="font-serif"
-                    style={{
-                      fontSize: 22,
-                      fontWeight: 800,
-                      color: 'var(--text-primary)',
-                      letterSpacing: '-0.01em'
-                    }}
-                  >
-                    {proj.title}
-                  </h3>
-                  <span className="font-mono" style={{ fontSize: 11, color: 'var(--text-secondary)' }}>
-                    {proj.category}
-                  </span>
+              {/* Right Column Biography & Bento Grid */}
+              <div className="col-span-12 md:col-span-8" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+                <span
+                  style={{
+                    fontFamily: "'JetBrains Mono', monospace",
+                    fontSize: '10px',
+                    letterSpacing: '0.25em',
+                    color: 'var(--text-secondary)',
+                    marginBottom: '16px',
+                    display: 'block'
+                  }}
+                >
+                  Biography
+                </span>
+                <p
+                  className="font-serif"
+                  style={{
+                    fontSize: 'clamp(20px, 3vw, 32px)',
+                    lineHeight: 1.45,
+                    color: 'var(--text-primary)',
+                    fontWeight: 600,
+                    marginBottom: '48px',
+                    letterSpacing: '-0.01em'
+                  }}
+                >
+                  I am Banashree Subhasmita Bhuyan (known as Barsha), currently pursuing my MCA at Regional College of Management, Bhubaneswar, maintaining a CGPA of 8.39. My background in Botany Honors drives a unique, multi-disciplinary approach to solving code problems.
+                </p>
+
+                {/* Bento Details Grid */}
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '30px' }}>
+                  
+                  {/* Education Timeline */}
+                  <div className="bento-card" style={{ padding: '28px', background: 'rgba(255, 255, 255, 0.4)', backdropFilter: 'blur(10px)', borderRadius: '16px' }}>
+                    <h4 className="font-mono" style={{ fontSize: 11, color: '#4e3b7c', fontWeight: 700, letterSpacing: '0.12em', marginBottom: '20px', textTransform: 'uppercase' }}>EDUCATION</h4>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                      {TIMELINE.map((ed, idx) => (
+                        <div key={idx} style={{ borderBottom: '1px dashed rgba(26,26,26,0.06)', paddingBottom: '10px' }}>
+                          <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--text-primary)' }}>{ed.title}</div>
+                          <div style={{ fontSize: 11, color: 'var(--text-secondary)', marginTop: '2px' }}>{ed.subtitle}</div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Technical Skills */}
+                  <div className="bento-card" style={{ padding: '28px', background: 'rgba(255, 255, 255, 0.4)', backdropFilter: 'blur(10px)', borderRadius: '16px' }}>
+                    <h4 className="font-mono" style={{ fontSize: 11, color: '#4e3b7c', fontWeight: 700, letterSpacing: '0.12em', marginBottom: '20px', textTransform: 'uppercase' }}>TECHNICAL SKILLS</h4>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                      {Object.entries(SKILLS).map(([cat, list]) => (
+                        <div key={cat}>
+                          <span className="font-mono" style={{ fontSize: 9, color: 'var(--text-secondary)', display: 'block', marginBottom: '6px', fontWeight: 600 }}>{cat.toUpperCase()}</span>
+                          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
+                            {list.map((sk) => (
+                              <span
+                                key={sk}
+                                className="font-mono skill-tag clickable"
+                                style={{
+                                  fontSize: 10,
+                                  padding: '4px 10px',
+                                  background: 'rgba(78, 59, 124, 0.05)',
+                                  color: '#4e3b7c',
+                                  borderRadius: 4,
+                                  border: '1px solid rgba(78, 59, 124, 0.08)'
+                                }}
+                              >
+                                {sk}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
                 </div>
-              </Link>
+              </div>
             </div>
-          ))}
-        </div>
-      </section>
+          </section>
 
-      {/* ABOUT / INFO SECTION */}
-      <section id="about" style={{ marginTop: 180, borderTop: '1px solid rgba(26, 26, 26, 0.08)', paddingTop: 80 }}>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(12, 1fr)', gap: '40px' }}>
-          {/* Left Column Portrait */}
-          <div className="col-span-12 md:col-span-4" style={{ display: 'flex', alignItems: 'center' }}>
+          {/* ACHIEVEMENTS SECTION */}
+          <section style={{ marginTop: '180px', borderTop: '1px solid rgba(26, 26, 26, 0.08)', paddingTop: '100px' }}>
+            <div style={{ marginBottom: '60px' }}>
+              <span
+                style={{
+                  fontFamily: "'JetBrains Mono', monospace",
+                  fontSize: '10px',
+                  letterSpacing: '0.25em',
+                  color: 'var(--text-secondary)',
+                  textTransform: 'uppercase',
+                  display: 'block',
+                  marginBottom: '12px'
+                }}
+              >
+                Highlights
+              </span>
+              <h2
+                style={{
+                  fontFamily: "'Syne', sans-serif",
+                  fontSize: 'clamp(28px, 5vw, 56px)',
+                  fontWeight: 900,
+                  color: 'var(--text-primary)',
+                  letterSpacing: '-0.02em',
+                  lineHeight: 1.1
+                }}
+              >
+                Achievements
+              </h2>
+            </div>
+
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '24px' }}>
+              {ACHIEVEMENTS.map((ach, idx) => (
+                <div
+                  key={idx}
+                  className="bento-card ach-card"
+                  style={{
+                    padding: '30px',
+                    background: 'rgba(255, 255, 255, 0.45)',
+                    backdropFilter: 'blur(12px)',
+                    border: '1px solid rgba(26, 26, 26, 0.05)',
+                    borderRadius: '16px',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '16px'
+                  }}
+                >
+                  <div style={{ fontSize: '32px' }}>{ach.icon}</div>
+                  <div>
+                    <h4
+                      style={{
+                        fontFamily: "'Syne', sans-serif",
+                        fontWeight: 700,
+                        fontSize: '16px',
+                        color: 'var(--text-primary)',
+                        lineHeight: 1.3
+                      }}
+                    >
+                      {ach.title}
+                    </h4>
+                    <span
+                      style={{
+                        fontFamily: "'JetBrains Mono', monospace",
+                        fontSize: '10px',
+                        letterSpacing: '0.12em',
+                        color: 'var(--text-secondary)',
+                        textTransform: 'uppercase',
+                        marginTop: '8px',
+                        display: 'block'
+                      }}
+                    >
+                      {ach.year}
+                    </span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          {/* CONTACT & FOOTER SECTION */}
+          <section
+            id="contact"
+            style={{
+              marginTop: '180px',
+              borderTop: '1px solid rgba(26, 26, 26, 0.08)',
+              paddingTop: '120px',
+              textAlign: 'center',
+              scrollMarginTop: '60px'
+            }}
+          >
+            <h2
+              className="font-serif clickable"
+              style={{
+                fontSize: 'clamp(36px, 8vw, 88px)',
+                fontWeight: 800,
+                color: 'var(--text-primary)',
+                letterSpacing: '-0.02em',
+                marginBottom: '60px',
+                lineHeight: 1.1
+              }}
+            >
+              Let's work together.
+            </h2>
+
             <div
               style={{
-                width: '100%',
-                aspectRatio: '0.75',
-                borderRadius: 8,
-                overflow: 'hidden',
-                background: '#dfdbd0'
+                display: 'flex',
+                justifyContent: 'center',
+                flexWrap: 'wrap',
+                gap: '40px',
+                marginBottom: '100px'
               }}
             >
-              <img
-                src="/portrait.png"
-                alt="Portrait"
-                style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-              />
+              {CONTACT_LINKS.map((link) => (
+                <a
+                  key={link.label}
+                  href={link.href}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="clickable font-mono"
+                  style={{
+                    fontSize: 13,
+                    color: 'var(--text-primary)',
+                    textDecoration: 'none',
+                    borderBottom: '1.5px solid var(--text-primary)',
+                    paddingBottom: '6px',
+                    fontWeight: 600,
+                    letterSpacing: '0.08em'
+                  }}
+                >
+                  {link.label}: {link.value}
+                </a>
+              ))}
             </div>
-          </div>
 
-          {/* Right Column Text */}
-          <div className="col-span-12 md:col-span-8" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-            <span
+            <div
               className="font-mono"
-              style={{ fontSize: 11, letterSpacing: '0.12em', color: 'var(--text-secondary)', marginBottom: 20, display: 'block' }}
-            >
-              ABOUT ME
-            </span>
-            <p
-              ref={bioRef}
-              className="font-serif"
               style={{
-                fontSize: 'clamp(22px, 3.5vw, 36px)',
-                lineHeight: 1.5,
-                color: 'var(--text-primary)',
-                fontWeight: 600,
-                marginBottom: 32
+                fontSize: 10,
+                color: 'var(--text-secondary)',
+                borderTop: '1px solid rgba(26, 26, 26, 0.05)',
+                paddingTop: '40px',
+                display: 'flex',
+                justifyContent: 'space-between',
+                letterSpacing: '0.05em'
               }}
             >
-              I am Banashree Subhasmita Bhuyan (known as Barsha), currently pursuing my MCA at Regional College of Management, Bhubaneswar, maintaining a CGPA of 8.39. My background in Botany Honors drives a unique, multi-disciplinary approach to solving code problems.
-            </p>
-
-            {/* Bento details */}
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 30, marginTop: 20 }}>
-              <div>
-                <h4 className="font-mono" style={{ fontSize: 11, color: 'var(--text-secondary)', marginBottom: 12 }}>EDUCATION</h4>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-                  {TIMELINE.map((ed, idx) => (
-                    <div key={idx} style={{ borderBottom: '1px dashed rgba(26,26,26,0.06)', paddingBottom: 6 }}>
-                      <div style={{ fontSize: 12, fontWeight: 700, color: 'var(--text-primary)' }}>{ed.title}</div>
-                      <div style={{ fontSize: 11, color: 'var(--text-secondary)' }}>{ed.subtitle}</div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              <div>
-                <h4 className="font-mono" style={{ fontSize: 11, color: 'var(--text-secondary)', marginBottom: 12 }}>TECHNICAL SKILLS</h4>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-                  {Object.entries(SKILLS).map(([cat, list]) => (
-                    <div key={cat}>
-                      <span className="font-mono" style={{ fontSize: 9, color: 'var(--text-secondary)', display: 'block', marginBottom: 4 }}>{cat.toUpperCase()}</span>
-                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4 }}>
-                        {list.map((sk) => (
-                          <span
-                            key={sk}
-                            className="font-mono"
-                            style={{
-                              fontSize: 10,
-                              padding: '2px 8px',
-                              background: '#dfdbd0',
-                              color: 'var(--text-primary)',
-                              borderRadius: 4
-                            }}
-                          >
-                            {sk}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
+              <span>© 2026 BANASHREE S. BHUYAN</span>
+              <span>BUILT WITH REACT + GSAP + THREE</span>
             </div>
-          </div>
-        </div>
-      </section>
+          </section>
 
-      {/* FOOTER & CTA */}
-      <section
-        id="contact"
-        style={{
-          marginTop: 180,
-          borderTop: '1px solid rgba(26, 26, 26, 0.08)',
-          paddingTop: 100,
-          textAlign: 'center'
-        }}
-      >
-        <h2
-          className="font-serif clickable"
-          style={{
-            fontSize: 'clamp(36px, 8vw, 88px)',
-            fontWeight: 800,
-            color: 'var(--text-primary)',
-            letterSpacing: '-0.02em',
-            marginBottom: 60
-          }}
-        >
-          Let's work together.
-        </h2>
-
-        <div
-          style={{
-            display: 'flex',
-            justifyContent: 'center',
-            flexWrap: 'wrap',
-            gap: '40px',
-            marginBottom: 80
-          }}
-        >
-          {CONTACT_LINKS.map((link) => (
-            <a
-              key={link.label}
-              href={link.href}
-              target="_blank"
-              rel="noreferrer"
-              className="clickable font-mono"
-              style={{
-                fontSize: 13,
-                color: 'var(--text-primary)',
-                textDecoration: 'none',
-                borderBottom: '1.5px solid var(--text-primary)',
-                paddingBottom: 4
-              }}
-            >
-              {link.label}: {link.value}
-            </a>
-          ))}
         </div>
-
-        <div
-          className="font-mono"
-          style={{
-            fontSize: 11,
-            color: 'var(--text-secondary)',
-            borderTop: '1px solid rgba(26, 26, 26, 0.04)',
-            paddingTop: 40,
-            display: 'flex',
-            justifyContent: 'space-between'
-          }}
-        >
-          <span>© 2026 BANASHREE S. BHUYAN</span>
-          <span>BUILT WITH REACT + GSAP + THREE</span>
-        </div>
-      </section>
+      </div>
     </div>
   );
 }
@@ -900,8 +867,6 @@ function ProjectDetailPage() {
 // ════════════════════════════════════════
 
 export default function App() {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-
   // Initialize Lenis smooth scroll and connect to GSAP ScrollTrigger
   useLayoutEffect(() => {
     const lenis = new Lenis({
@@ -931,9 +896,8 @@ export default function App() {
       {/* Bespoke lag cursor */}
       <BespokeCursor />
 
-      {/* Header and Menu Navigation */}
-      <HeaderBar onMenuToggle={() => setIsMenuOpen(true)} />
-      <MenuOverlay isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
+      {/* Bottom Floating Dock Navigation Menu */}
+      <BottomDockMenu />
 
       {/* Transition curtain Layout Wrapper */}
       <TransitionLayout>
